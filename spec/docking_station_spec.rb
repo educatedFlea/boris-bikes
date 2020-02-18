@@ -1,7 +1,16 @@
 require 'docking_station'
 
 describe DockingStation do 
-  
+  it "has 20 parking lots by default" do
+    docking_station = DockingStation.new
+    expect(docking_station.capacity).to eq DockingStation::DEFAULT_CAPACITY
+  end  
+
+  it "allow to change the default capacity" do
+    docking_station = DockingStation.new(21)
+    expect(docking_station.capacity).to eq 21
+  end  
+
   describe '#release_bike' do 
   it 'release a bike' do
     bike = Bike.new
@@ -32,7 +41,7 @@ it "docks something" do
 end 
 
 it "raises error when the dock is full" do 
-  DockingStation::DEFAULT_CAPACITY.times { subject.dock Bike.new }
+  subject.capacity.times { subject.dock Bike.new }
   expect { subject.dock Bike.new}.to raise_error 'Docking station is full'
   end 
 end 
