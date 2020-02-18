@@ -31,7 +31,7 @@ it "docks something" do
 end 
 
 it "raises error when the dock is full" do 
-  subject.dock(Bike.new)
+  20.times { subject.dock Bike.new }
   expect { subject.dock Bike.new}.to raise_error 'Docking station is full'
   end 
 end 
