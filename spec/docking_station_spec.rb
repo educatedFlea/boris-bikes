@@ -27,7 +27,7 @@ RSpec.describe DockingStation do
     expect(docking_station.capacity).to eq 19
   end  
 
-  #This is a nested describe 
+  #This is a nested describe for method 'release_bike'
   describe '#release_bike' do 
   # test if a bike can be release after docked 
   it 'release a bike' do
@@ -40,50 +40,57 @@ RSpec.describe DockingStation do
     it 'raises an error when there are no bikes availale' do
       expect { subject.release_bike }.to raise_error 'No bikes available'
     end 
-
+  # replacing 'Bike.new' by 'double(:bike)'; mocking the behaviour of an instance
+    let (:bike) { double :bike }
+    it 'releases a working bike' do 
+      allow(bike).to receive(:working?).and_return(true)
+      subject.dock(bike)
+      released_bike = subject.release_bike
+      expect(released_bike).to be_working
+    end 
+  # Test for not releasing brokem bike BEFORE using doubles
+    # it 'cannot release a broken bike' do
+    #   docking_station = DockingStation.new 
+    #   bike = Bike.new 
+    #   bike.report_broken
+    #   docking_station.dock(bike)
+    #   expect{ docking_station.release_bike }.to raise_error 'This bike is broken'
+    # end  
     it 'cannot release a broken bike' do
-      docking_station = DockingStation.new 
-      bike = Bike.new 
-      bike.report_broken
-      docking_station.dock(bike)
-      expect{ docking_station.release_bike }.to raise_error 'This bike is broken'
+      bike = double(:bike, broken?:true)
+      subject.dock bike
+      expect{ subject.release_bike }.to raise_error 'This bike is broken'
     end  
   end 
   # end of nested describe
 
-
+# This test is no longer needed
 # docking_station = DockingStation.new
 #   it "gets a bike" do
 #    expect(docking_station.release_bike).to be_instance_of(Bike) 
 #   end
 
-# it 'a working bike' do
-#   bike = Bike.new
-#   expect(bike).to be_working
-#   end 
+# Nested describe for method 'dock'
+  describe '#dock' do 
+    it 'docks something' do 
+      bike = Bike.new
+      expect(subject.dock(bike)).to eq bike
+    end 
 
-# Nested describe
-describe '#dock' do 
-it 'docks something' do 
-  bike = Bike.new
-  expect(subject.dock(bike)).to eq bike
-end 
+    it 'raises error when the dock is full' do 
+      subject.capacity.times { subject.dock double(:bike) }
+      expect { subject.dock double(:bike)}.to raise_error 'Docking station is full'
+    end 
 
-it 'raises error when the dock is full' do 
-  subject.capacity.times { subject.dock Bike.new }
-  expect { subject.dock Bike.new}.to raise_error 'Docking station is full'
+    it 'should take one bike when docking' do
+      expect(subject).to respond_to(:dock).with(1).argument
+    end 
+
+    it 'return docked bikes' do
+      bike = Bike.new
+      subject.dock(bike)
+      expect(subject.bike).to eq bike
+    end  
   end 
-end 
 # end of nested describe 
-
-
-it 'should take one bike when docking' do
-  expect(subject).to respond_to(:dock).with(1).argument
-end 
-
-it 'return docked bikes' do
-  bike = Bike.new
-  subject.dock(bike)
-  expect(subject.bike).to eq bike
-end  
 end 
