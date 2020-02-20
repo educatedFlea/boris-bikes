@@ -40,6 +40,14 @@ RSpec.describe DockingStation do
     it 'raises an error when there are no bikes availale' do
       expect { subject.release_bike }.to raise_error 'No bikes available'
     end 
+
+    it 'cannot release a broken bike' do
+      docking_station = DockingStation.new 
+      bike = Bike.new 
+      bike.report_broken
+      docking_station.dock(bike)
+      expect{ docking_station.release_bike }.to raise_error 'This bike is broken'
+    end  
   end 
   # end of nested describe
 
@@ -49,10 +57,10 @@ RSpec.describe DockingStation do
 #    expect(docking_station.release_bike).to be_instance_of(Bike) 
 #   end
 
-it 'a working bike' do
-  bike = Bike.new
-  expect(bike).to be_working
-  end 
+# it 'a working bike' do
+#   bike = Bike.new
+#   expect(bike).to be_working
+#   end 
 
 # Nested describe
 describe '#dock' do 

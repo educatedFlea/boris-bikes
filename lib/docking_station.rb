@@ -14,6 +14,7 @@ class DockingStation
   # pop method: to remove the last element of the given array and returns the removed elements.
   def release_bike
     fail 'No bikes available' if empty?
+    fail 'This bike is broken' if @bike.broken?
     @bikes.pop
   end 
 
