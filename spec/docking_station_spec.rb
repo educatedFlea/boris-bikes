@@ -1,6 +1,14 @@
 require 'docking_station'
 
-describe DockingStation do 
+RSpec.describe DockingStation do 
+  describe 'initialization' do
+    subject {DockingStation.new}
+    let(:bike) { Bike.new }
+    it 'defaults capacity' do 
+      described_class::DEFAULT_CAPACITY.times { subject.dock(bike) }
+      expect { subject.dock(bike) }.to raise_error 'Docking station is full'
+    end 
+  end 
   # test if the docking station is created with 20 capacity by default
   # using Class::Const to access the constant 
   it 'has 20 parking lots by default' do

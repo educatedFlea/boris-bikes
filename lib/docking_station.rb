@@ -2,8 +2,10 @@ require_relative 'bike'
 
 class DockingStation 
   DEFAULT_CAPACITY = 20
-  attr_reader :bike,:capacity
-
+  # The :bike here is to access the argument of dock method (to return the value of the specific bike docked rather than the array)
+  attr_reader :bike
+  # attr_accessor can BOTH write and read an attribute 
+  attr_accessor :capacity
   def initialize(capacity = DEFAULT_CAPACITY)
     @capacity = capacity
     @bikes = []
@@ -22,7 +24,8 @@ class DockingStation
   end 
 
   private 
-
+  # The :bikes here because this attribute so far only need to be access by the private methods.
+  attr_reader :bikes
   def full?
     @bikes.count >= capacity
   end 
@@ -31,4 +34,3 @@ class DockingStation
     @bikes.empty?
   end 
 end 
-
